@@ -189,7 +189,7 @@ getwq <- function(station_id = NA, date_min = NA, date_max = NA,
 #'By default, \code{get_hydro} returns a cleaned output where metadata
 #' (station-name, variable, measurement units) is wholly contained in the column
 #' name. This is accomplished internally by the \code{\link{clean_hydro}}
-#' function. If additional metadata such as lattitude and longitude are desired
+#' function. If additional metadata such as latitude and longitude are desired
 #' set the \code{raw} argument to \code{TRUE}.
 #'@examples
 #'\dontrun{
@@ -261,12 +261,10 @@ get_hydro <- function(dbkey = NA, date_min = NA, date_max = NA, raw = FALSE,
 # connect metadata header to results
 parse_hydro_response <- function(res, raw = FALSE){
 
-    i <- 1
-    while(any(!is.na(suppressMessages(read.csv(text = res, skip = i,
-    stringsAsFactors = FALSE, header = FALSE))[i, 10:16]))){
-      i <- i + 1
-    }
-    
+    raw <- suppressMessages(read.csv(text = res, skip = 1,
+                                     stringsAsFactors = FALSE))
+    i <- min(which(apply(raw[,10:16], 1, function(x) all(is.na(x)))))
+  
     metadata <- suppressMessages(read.csv(text = res, skip = 1,
                 stringsAsFactors = FALSE))[1:(i - 1),]
     
@@ -302,7 +300,8 @@ parse_hydro_response <- function(res, raw = FALSE){
     names(dt) <- tolower(names(dt))
     
     dt
-}
+    }
+#}
 
 #'@export
 gethydro <- function(dbkey = NA, date_min = NA, date_max = NA, raw = FALSE,
@@ -320,6 +319,7 @@ gethydro <- function(dbkey = NA, date_min = NA, date_max = NA, raw = FALSE,
 #'@param category character string, choice of "WEATHER", "SW", "GW", or "WQ"
 #'@param stationid character string specifying station name
 #'@param param character string specifying desired parameter name
+#'@param longest logical limit results to the longest period-of-record?
 #'@param freq character string specifying collection frequency (daily = "DA")
 #'@param stat character string specifying statistic type
 #'@param recorder character string specifying recorder information
@@ -365,9 +365,9 @@ gethydro <- function(dbkey = NA, date_min = NA, date_max = NA, raw = FALSE,
 #'get_dbkey(stationid = "C111%", category = "WQ")
 #'}
 
-get_dbkey <- function(category, stationid = NA, param = NA, freq = NA,
-            stat = NA, recorder = NA, agency = NA, strata = NA,
-            detail.level = "summary", ...){
+get_dbkey <- function(category, stationid = NA, param = NA, freq = NA, 
+                      longest = FALSE, stat = NA, recorder = NA, agency = NA, 
+                      strata = NA, detail.level = "summary", ...){
 
   if(!(detail.level %in% c("full", "summary", "dbkey"))){
     stop("Must specify either 'full', 'summary',
@@ -389,6 +389,7 @@ get_dbkey <- function(category, stationid = NA, param = NA, freq = NA,
                v_recorder = recorder, v_agency = agency,
                v_strata_from = strata_from, v_strata_to = strata_to)
   greater_length_args <- lapply(user_args, function(x) length(x))
+  
   if(length(which(greater_length_args > 1)) >  0){
     collapse_args <- user_args[which(greater_length_args > 1)]
     collapse_args <- paste0(do.call("c", collapse_args), "/", collapse = "")
@@ -451,12 +452,27 @@ get_dbkey <- function(category, stationid = NA, param = NA, freq = NA,
     if(any(not_na_col == FALSE)){
       res <- res[,not_na_col]  
     }
+    if(longest){
+      get_longest_por <- function(df){
+        period_of_record <- apply(df, 1, 
+                                  function(x) x[c("Start Date", "End Date")])
+        period_of_record <- as.POSIXct(strptime(period_of_record, "%d-%b-%Y"))
+        df[which.max(abs(
+          period_of_record[(1:length(period_of_record) %% 2) == 1] - 
+            period_of_record[(1:length(period_of_record) %% 2) == 0])),]
+      }
+      
+      res <- do.call("rbind", lapply(unique(res$Group), 
+                    function(x) get_longest_por(res[res$Group == x,])))
+      
+    }
   }else{
     not_na_element <- which(is.na(res))
     if(length(not_na_element) > 0){
       res <- res[-not_na_element]  
     }
   }
+  
   res[,1] <- as.character(res[,1])
   
   if(any(names(res) == "Get Data")){
