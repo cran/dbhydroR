@@ -34,7 +34,7 @@ library(dbhydroR)
 ###################################################
 ### code chunk number 6: dbhydroR.Rnw:88-90 (eval = FALSE)
 ###################################################
-## get_wq(station_id = "FLAB08", date_min = "2011-03-01", 
+## get_wq(station_id = "FLAB08", date_min = "2011-03-01",
 ##       date_max = "2012-05-01", test_name = "CHLOROPHYLLA-SALINE")
 
 
@@ -48,7 +48,7 @@ library(dbhydroR)
 ###################################################
 ### code chunk number 8: dbhydroR.Rnw:102-104 (eval = FALSE)
 ###################################################
-## get_wq(station_id = c("FLAB0%"), date_min = "2011-03-01", 
+## get_wq(station_id = c("FLAB0%"), date_min = "2011-03-01",
 ##       date_max = "2012-05-01", test_name = "CHLOROPHYLLA-SALINE")
 
 
@@ -63,7 +63,7 @@ library(dbhydroR)
 ###################################################
 ### code chunk number 10: dbhydroR.Rnw:119-122 (eval = FALSE)
 ###################################################
-## raw_wq <- get_wq(station_id = "FLAB08", date_min = "2011-03-01", 
+## raw_wq <- get_wq(station_id = "FLAB08", date_min = "2011-03-01",
 ##       date_max = "2011-05-01", test_name = "CHLOROPHYLLA-SALINE",
 ##       raw = TRUE)
 
@@ -139,7 +139,7 @@ library(dbhydroR)
 ## raw_data <- get_hydro(date_min = "2013-01-01", date_max = "2013-02-02",
 ##          stationid = "JBTS", category = "WEATHER", param = "WNDS",
 ##          freq = "DA", stat = "MEAN", recorder = "CR10", agency = "WMD", raw = TRUE)
-##          
+## 
 ## clean_hydro(raw_data)
 
 

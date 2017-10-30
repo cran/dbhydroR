@@ -5,7 +5,7 @@
 Programmatic access to the South Florida Water Management District's [DBHYDRO database](https://www.sfwmd.gov/science-data/dbhydro)
 ===================================================================================================================================
 
-[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) [![Travis-CI Build Status](https://travis-ci.org/ropenscilabs/dbhydroR.svg?branch=master)](https://travis-ci.org/ropenscilabs/dbhydroR) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/dbhydroR)](https://cran.r-project.org/package=dbhydroR) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/dbhydroR)](https://cran.r-project.org/package=dbhydroR) [![](https://badges.ropensci.org/61_status.svg)](https://github.com/ropensci/onboarding/issues/61)
+[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) [![Travis-CI Build Status](https://travis-ci.org/ropenscilabs/dbhydroR.svg?branch=master)](https://travis-ci.org/ropenscilabs/dbhydroR) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/dbhydroR)](https://cran.r-project.org/package=dbhydroR) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/dbhydroR)](https://cran.r-project.org/package=dbhydroR) [![](https://badges.ropensci.org/61_status.svg)](https://github.com/ropensci/onboarding/issues/61) [![DOI](https://zenodo.org/badge/64503356.svg)](https://zenodo.org/badge/latestdoi/64503356)
 
 `dbhydroR` provides scripted access to the South Florida Water Management District's DBHYDRO database which holds over 35 million hydrologic and water quality records from the Florida Everglades and surrounding areas.
 
@@ -31,7 +31,7 @@ Usage
 
 ### Water Quality Data
 
-Station IDs and date ranges can be viewed in the [ArcGIS Online Station Map](http://my.sfwmd.gov/WAB/EnvironmentalMonitoring/index.html). Test names can be viewed in the [Data Types Metadata Table](http://my.sfwmd.gov/dbhydroplsql/show_dbkey_info.show_data_type_info).
+Station IDs and date ranges can be viewed in the [Environmental Monitoring Location Maps](https://www.sfwmd.gov/documents-by-tag/emmaps). Test names can be viewed in the [Data Types Metadata Table](http://my.sfwmd.gov/dbhydroplsql/show_dbkey_info.show_data_type_info).
 
 #### One variable at one station
 
@@ -63,7 +63,7 @@ Station IDs and date ranges can be viewed in the [ArcGIS Online Station Map](htt
 
 ### Hydrologic data
 
-Station IDs and date ranges can be viewed in the [ArcGIS Online Station Map](http://my.sfwmd.gov/WAB/EnvironmentalMonitoring/index.html).
+Station IDs and date ranges can be viewed in the [Environmental Monitoring Location Maps](https://www.sfwmd.gov/documents-by-tag/emmaps).
 
 #### Identify unique time series (dbkeys) before-hand
 
