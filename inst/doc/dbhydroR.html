@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Joseph Stachelek" />
+
+<meta name="date" content="2018-05-22" />
+
+<title>dbhydroR: An R package to access the DBHYDRO Environmental Database</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">dbhydroR: An R package to access the DBHYDRO Environmental Database</h1>
+<h4 class="author"><em>Joseph Stachelek</em></h4>
+<h4 class="date"><em>2018-05-22</em></h4>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This document introduces the <code>dbhydroR</code> package and its associated functions. These functions are aimed at improving programmatic workflows that query the DBHYDRO Environmental Database which holds over 35 million hydrologic and water quality records from the Florida Everglades and surrounding areas.</p>
+</div>
+<div id="package-installation" class="section level2">
+<h2>Package installation</h2>
+<p>Computers running the Windows operating system can only install binary package archive files unless they have additional <a href="https://cran.r-project.org/bin/windows/Rtools/">compiler software</a> installed. Without this software, <code>dbhydroR</code> can be installed from CRAN by running the following command in the <code>R</code> console:</p>
+<div id="stable-version-from-cran" class="section level3">
+<h3>Stable version from CRAN</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;dbhydroR&quot;</span>)</code></pre></div>
+<p>Otherwise, the <code>dbhydroR</code> can be installed by running the following command in the <code>R</code> console:</p>
+</div>
+<div id="or-development-version-from-github" class="section level3">
+<h3>or development version from Github</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;ropensci/dbhydroR&quot;</span>)</code></pre></div>
+<p> Once installed, the package can be loaded using the following command:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dbhydroR)</code></pre></div>
+</div>
+</div>
+<div id="composing-database-queries" class="section level2">
+<h2>Composing database queries</h2>
+<div id="water-quality-data" class="section level3">
+<h3>Water quality data</h3>
+<p>Water quality data can be retrieved using the <code>get_wq</code> function which takes four required arguments. The user must specify a station ID, a test name, and a date range. Station IDs can be located on the <a href="http://my.sfwmd.gov/WAB/EnvironmentalMonitoring/index.html">ArcGIS Online Station Map</a> or the <a href="http://my.sfwmd.gov/KMLEXT/CUSTOMKMLS/DBHydro/DBHydroKML/DBHYDRO_KML.kmz">Google Earth kmz file</a>. An abbreviated list of available test names can be found in the <a href="#appendix">appendix</a> to this document while a full listing can be found at the <a href="http://my.sfwmd.gov/dbhydroplsql/show_dbkey_info.show_data_type_info">DBHYDRO metadata page</a>. Dates must be specified in YYYY-MM-DD format (e.g. 2015-02-26). The following set of examples retrieve measurements between March 2011 and May 2012. They can be run from the R console by issuing the command:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">example</span>(get_wq)</code></pre></div>
+
+<p>By default, <code>get_wq</code> returns a <em>cleaned output</em>. First, the cleaning function  converts the raw output from native DBHYDRO <em>long</em> format (each piece of data on its own row) to <em>wide</em> format (each site x variable combination in its own column) using the reshape2 package <span class="citation">(Wickham 2007)</span>. Next, the extra columns associated with QA flags, LIMS, and District receiving are removed. Finally, row entries associated with QA field <em>blanks</em>, which are used to check on potential sources of contamination, are removed. Setting the <code>raw</code> flag to <code>TRUE</code> will force  to retain information on QA field blanks as well as the other QA fields. An example query that retains this information and the original <em>long</em> formatting is shown below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">raw_wq &lt;-<span class="st"> </span><span class="kw">get_wq</span>(<span class="dt">station_id =</span> <span class="st">&quot;FLAB08&quot;</span>, <span class="dt">date_min =</span> <span class="st">&quot;2011-03-01&quot;</span>, 
+      <span class="dt">date_max =</span> <span class="st">&quot;2011-05-01&quot;</span>, <span class="dt">test_name =</span> <span class="st">&quot;CHLOROPHYLLA-SALINE&quot;</span>,
+      <span class="dt">raw =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p>This raw data can then be cleaned using the  function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">clean_wq</span>(raw_wq)</code></pre></div>
+</div>
+<div id="hydrologic-data" class="section level3">
+<h3>Hydrologic data</h3>
+<p>Hydrologic time series data can be retrieved using the <code>get_hydro</code> function. The first task to accomplish prior to running <code>get_hydro</code> is to identify one or more dbkeys which correspond to unique site x variable time-series. This can be done before-hand using the <code>get_dbkey</code> function, the <a href="http://my.sfwmd.gov/WAB/EnvironmentalMonitoring/index.html">ArGIS Online Station Map</a> or the <a href="http://my.sfwmd.gov/dbhydroplsql/show_dbkey_info.main_menu">DBHYDRO Browser</a>. One useful strategy for finding desired dbkeys is to run the <code>get_dbkey</code> function interactively using progressively narrower search terms. For example, suppose we are interested in daily average wind data at Joe Bay but we have no alphanumeric <code>dbkey</code>. Initially we could run <code>get_dbkey</code> with the <code>detail.level</code> set to “summary”.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_dbkey</span>(<span class="dt">stationid =</span> <span class="st">&quot;JBTS&quot;</span>, <span class="dt">category =</span> <span class="st">&quot;WEATHER&quot;</span>, <span class="dt">param =</span> <span class="st">&quot;WNDS&quot;</span>,
+         <span class="dt">detail.level =</span> <span class="st">&quot;summary&quot;</span>)</code></pre></div>
+<p>Our search returns two results but only one of them has a daily average (DA) measurement frequency. We can verify the remaining attributes of our likely dbkey by setting the <code>freq</code> parameter to “DA” and the <code>detail.level</code> parameter to “full”.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_dbkey</span>(<span class="dt">stationid =</span> <span class="st">&quot;JBTS&quot;</span>, <span class="dt">category =</span> <span class="st">&quot;WEATHER&quot;</span>, <span class="dt">param =</span> <span class="st">&quot;WNDS&quot;</span>,
+         <span class="dt">freq =</span> <span class="st">&quot;DA&quot;</span>, <span class="dt">detail.level =</span> <span class="st">&quot;full&quot;</span>)</code></pre></div>
+<p>This exact dbkey can only be returned reliably by specifying all of the <code>get_dbkey</code> parameters applicable to the “WEATHER” category.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_dbkey</span>(<span class="dt">stationid =</span> <span class="st">&quot;JBTS&quot;</span>, <span class="dt">category =</span> <span class="st">&quot;WEATHER&quot;</span>, <span class="dt">param =</span> <span class="st">&quot;WNDS&quot;</span>,
+         <span class="dt">freq =</span> <span class="st">&quot;DA&quot;</span>, <span class="dt">stat =</span> <span class="st">&quot;MEAN&quot;</span>, <span class="dt">recorder =</span> <span class="st">&quot;CR10&quot;</span>, <span class="dt">agency =</span> <span class="st">&quot;WMD&quot;</span>,
+         <span class="dt">detail.level =</span> <span class="st">&quot;dbkey&quot;</span>)</code></pre></div>
+<p>Now that we have our dbkey in hand, we can use is as input to <code>get_hydro</code>. In addition to a dbkey, we must specify a date range. Dates must be entered in YYYY-MM-DD format (e.g. 2015-02-26).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_hydro</span>(<span class="dt">dbkey =</span> <span class="st">&quot;15081&quot;</span>,
+         <span class="dt">date_min =</span> <span class="st">&quot;2013-01-01&quot;</span>, <span class="dt">date_max =</span> <span class="st">&quot;2013-02-02&quot;</span>)</code></pre></div>
+<p>Alternatively, we can specify a set of arguments in our call to <code>get_hydro</code> that will be passed to <code>get_dbkey</code> on-the-fly. Use caution when using this strategy as complex stationid/category/parameter combinations can easily cause errors or return unexpected results. It is good practice to pre-screen your parameter values using <code>get_dbkey</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_hydro</span>(<span class="dt">date_min =</span> <span class="st">&quot;2013-01-01&quot;</span>, <span class="dt">date_max =</span> <span class="st">&quot;2013-02-02&quot;</span>,
+         <span class="dt">stationid =</span> <span class="st">&quot;JBTS&quot;</span>, <span class="dt">category =</span> <span class="st">&quot;WEATHER&quot;</span>, <span class="dt">param =</span> <span class="st">&quot;WNDS&quot;</span>,
+         <span class="dt">freq =</span> <span class="st">&quot;DA&quot;</span>, <span class="dt">stat =</span> <span class="st">&quot;MEAN&quot;</span>, <span class="dt">recorder =</span> <span class="st">&quot;CR10&quot;</span>, <span class="dt">agency =</span> <span class="st">&quot;WMD&quot;</span>)</code></pre></div>
+<p>The contents of multiple data streams can be returned by specifying multiple dbkeys or entering on-the-fly <code>get_dbkey</code> queries that return multiple dbkeys.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_hydro</span>(<span class="dt">dbkey =</span> <span class="kw">c</span>(<span class="st">&quot;15081&quot;</span>, <span class="st">&quot;15069&quot;</span>), <span class="dt">date_min =</span> <span class="st">&quot;2013-01-01&quot;</span>,
+         <span class="dt">date_max =</span> <span class="st">&quot;2013-02-02&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_hydro</span>(<span class="dt">date_min =</span> <span class="st">&quot;2013-01-01&quot;</span>, <span class="dt">date_max =</span> <span class="st">&quot;2013-02-02&quot;</span>,
+         <span class="dt">category =</span> <span class="st">&quot;WEATHER&quot;</span>, <span class="dt">stationid =</span> <span class="kw">c</span>(<span class="st">&quot;JBTS&quot;</span>, <span class="st">&quot;MBTS&quot;</span>),
+         <span class="dt">param =</span> <span class="st">&quot;WNDS&quot;</span>, <span class="dt">freq =</span> <span class="st">&quot;DA&quot;</span>, <span class="dt">stat =</span> <span class="st">&quot;MEAN&quot;</span>)</code></pre></div>
+<p>More <code>get_hydro</code> examples including queries of other <code>category</code> values (“SW”, “GW”, and “WQ”) can be viewed by issuing the following commands from the <code>R</code> console:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">example</span>(get_dbkey)
+<span class="kw">example</span>(get_hydro)</code></pre></div>
+<p>By default, <code>get_hydro</code> returns a <em>cleaned output</em>. First, the cleaning function <code>clean_hydro</code> converts the raw output from native DBHYDRO <em>long</em> format (each piece of data on its own row) to <em>wide</em> format (each site x variable combination in its own column) using the reshape2 package <span class="citation">(Wickham 2007)</span>. Next, some extra columns are removed that are associated with measurement location (longitude/latitude), frequency, and QA flags are removed. Setting the <code>raw</code> flag to <code>TRUE</code> will force <code>get_hydro</code> to retain the original formatting and metadata fields. An example query that retains this information and the original <em>long</em> formatting is shown below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">raw_data &lt;-<span class="st"> </span><span class="kw">get_hydro</span>(<span class="dt">date_min =</span> <span class="st">&quot;2013-01-01&quot;</span>, <span class="dt">date_max =</span> <span class="st">&quot;2013-02-02&quot;</span>,
+         <span class="dt">stationid =</span> <span class="st">&quot;JBTS&quot;</span>, <span class="dt">category =</span> <span class="st">&quot;WEATHER&quot;</span>, <span class="dt">param =</span> <span class="st">&quot;WNDS&quot;</span>,
+         <span class="dt">freq =</span> <span class="st">&quot;DA&quot;</span>, <span class="dt">stat =</span> <span class="st">&quot;MEAN&quot;</span>, <span class="dt">recorder =</span> <span class="st">&quot;CR10&quot;</span>, <span class="dt">agency =</span> <span class="st">&quot;WMD&quot;</span>, <span class="dt">raw =</span> <span class="ot">TRUE</span>)
+         
+<span class="kw">clean_hydro</span>(raw_data)</code></pre></div>
+</div>
+</div>
+<div id="appendix" class="section level2">
+<h2>Appendix </h2>
+<div id="test-names" class="section level3">
+<h3>Test names</h3>
+<p>There are many test names available in DBHYDRO. A subset of these are detailed in the following table.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Code</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AMMONIA-N</td>
+</tr>
+<tr class="even">
+<td>CARBON, TOTAL ORGANIC</td>
+</tr>
+<tr class="odd">
+<td>CHLOROPHYLL-A(LC)</td>
+</tr>
+<tr class="even">
+<td>CHLOROPHYLL-B(LC)</td>
+</tr>
+<tr class="odd">
+<td>CHLOROPHYLLA-SALINE</td>
+</tr>
+<tr class="even">
+<td>DISSOLVED OXYGEN</td>
+</tr>
+<tr class="odd">
+<td>KJELDAHL NITROGEN,TOTAL</td>
+</tr>
+<tr class="even">
+<td>NITRATE+NITRITE-N</td>
+</tr>
+<tr class="odd">
+<td>NITRITE-N</td>
+</tr>
+<tr class="even">
+<td>PHEOPHYTIN-A(LC)</td>
+</tr>
+<tr class="odd">
+<td>PHOSPHATE,ORTHO AS P</td>
+</tr>
+<tr class="even">
+<td>PHOSPHATE,TOTAL AS P</td>
+</tr>
+<tr class="odd">
+<td>SALINITY</td>
+</tr>
+<tr class="even">
+<td>SILICA</td>
+</tr>
+<tr class="odd">
+<td>SP CONDUCTIVITY, FIELD</td>
+</tr>
+<tr class="even">
+<td>TEMP</td>
+</tr>
+<tr class="odd">
+<td>TOTAL NITROGEN</td>
+</tr>
+<tr class="even">
+<td>TURBIDITY</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="further-reading" class="section level3">
+<h3>Further reading</h3>
+<p>See section on URL-based data access in the <a href="https://www.sfwmd.gov/sites/default/files/documents/dbhydrobrowseruserdocumentation.pdf">DBHYDRO Browser User’s Guide</a></p>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-reshape2">
+<p>Wickham, Hadley. 2007. “Reshaping Data with the reshape Package.” <em>Journal of Statistical Software</em> 21 (12): 1–20. <a href="http://www.jstatsoft.org/v21/i12/" class="uri">http://www.jstatsoft.org/v21/i12/</a>.</p>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
