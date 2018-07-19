@@ -19,8 +19,8 @@ for specific options}
 
 \item{date_max}{character date must be in POSIXct YYYY-MM-DD format}
 
-\item{test_name}{character string of test name(s). See the ArcGIS Online
-Station Map at \url{http://my.sfwmd.gov/WAB/EnvironmentalMonitoring/index.html}
+\item{test_name}{character string of test name(s). See the SFWMD
+Station Maps at \url{https://www.sfwmd.gov/documents-by-tag/emmaps}
 for specific options}
 
 \item{mdl_handling}{character string specifying the handling of measurement

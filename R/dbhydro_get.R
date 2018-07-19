@@ -7,8 +7,8 @@
 #' for specific options
 #'@param date_min character date must be in POSIXct YYYY-MM-DD format
 #'@param date_max character date must be in POSIXct YYYY-MM-DD format
-#'@param test_name character string of test name(s). See the ArcGIS Online
-#' Station Map at \url{http://my.sfwmd.gov/WAB/EnvironmentalMonitoring/index.html}
+#'@param test_name character string of test name(s). See the SFWMD
+#' Station Maps at \url{https://www.sfwmd.gov/documents-by-tag/emmaps}
 #' for specific options
 #'@param raw logical default is FALSE, set to TRUE to return data in "long"
 #' format with all comments, qa information, and database codes included
@@ -254,23 +254,25 @@ get_hydro <- function(dbkey = NA, date_min = NA, date_max = NA, raw = FALSE,
   if(raw == FALSE){
     res <- clean_hydro(res)
   }
-
   res
 }
 
 # connect metadata header to results
 parse_hydro_response <- function(res, raw = FALSE){
+    base_skip <- 1
+    raw       <- suppressMessages(read.csv(text = res, skip = base_skip,
+                                           stringsAsFactors = FALSE, row.names = NULL))
+    i         <- 1 + min(which(apply(raw[,10:16], 1, function(x) all(is.na(x)))))
 
-    raw <- suppressMessages(read.csv(text = res, skip = 1,
-                                     stringsAsFactors = FALSE))
-    i <- min(which(apply(raw[,10:16], 1, function(x) all(is.na(x)))))
+    # metadata should have type and units columns
+    metadata  <- suppressMessages(read.csv(text = res, skip = base_skip,
+                                    stringsAsFactors = FALSE, row.names = NULL))[1:(i - 1),]
+    names(metadata) <- c(names(metadata)[2:(ncol(metadata))], "AID")
 
-    metadata <- suppressMessages(read.csv(text = res, skip = 1,
-                stringsAsFactors = FALSE))[1:(i - 1),]
-
-    try({dt <- suppressMessages(read.csv(text = res, skip = i + 1,
+    try({dt <- suppressMessages(read.csv(text = res, skip = i,
       stringsAsFactors = FALSE, colClasses = c("DBKEY" = "character")))}
       , silent = TRUE)
+
     if(class(dt) != "data.frame"){
       stop("No data found")
     }
