@@ -15,24 +15,24 @@ library(dbhydroR)
 
 ## ----eval = FALSE-------------------------------
 #  get_wq(station_id = "FLAB08", date_min = "2011-03-01",
-#        date_max = "2012-05-01", test_name = "CHLOROPHYLLA-SALINE")
+#        date_max = "2012-05-01", test_name = "CHLOROPHYLL-A, SALINE")
 
 ## ----eval = FALSE-------------------------------
 #  get_wq(station_id = c("FLAB08","FLAB09"), date_min = "2011-03-01",
-#        date_max = "2012-05-01", test_name = "CHLOROPHYLLA-SALINE")
+#        date_max = "2012-05-01", test_name = "CHLOROPHYLL-A, SALINE")
 
 ## ----eval = FALSE-------------------------------
 #  get_wq(station_id = c("FLAB0%"), date_min = "2011-03-01",
-#        date_max = "2012-05-01", test_name = "CHLOROPHYLLA-SALINE")
+#        date_max = "2012-05-01", test_name = "CHLOROPHYLL-A, SALINE")
 
 ## ----eval = FALSE-------------------------------
 #  get_wq(station_id = c("FLAB08","FLAB09"), date_min = "2011-03-01",
-#        date_max = "2012-05-01", test_name = c("CHLOROPHYLLA-SALINE",
+#        date_max = "2012-05-01", test_name = c("CHLOROPHYLL-A, SALINE",
 #        "SALINITY"))
 
 ## ----eval = FALSE-------------------------------
 #  raw_wq <- get_wq(station_id = "FLAB08", date_min = "2011-03-01",
-#        date_max = "2011-05-01", test_name = "CHLOROPHYLLA-SALINE",
+#        date_max = "2011-05-01", test_name = "CHLOROPHYLL-A, SALINE",
 #        raw = TRUE)
 
 ## ----eval = FALSE-------------------------------

@@ -1,3 +1,10 @@
+# dbhydroR 0.2-8 
+
+## Minor changes
+
+* Switched all URLs from http to https
+* Now caching test web requests
+
 # dbhydroR 0.2-7 (2019-02-15)
 
 ## Bug fixes
